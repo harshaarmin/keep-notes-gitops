@@ -10,7 +10,7 @@ frontend:
     port: 80
 
 backend:
-  replicaCount: 3
+  replicaCount: 4
   image:
     repository: nginx
     tag: "1.28"
