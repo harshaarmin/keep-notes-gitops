@@ -1,0 +1,28 @@
+
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+
+metadata:
+  name: keep-notes
+  namespace: argocd
+
+spec:
+  project: default
+
+  source:
+    repoURL: https://github.com/harshaarmin/keep-notes-gitops.git
+    targetRevision: main
+    path: helm/keep-notes
+    helm:
+      releaseName: keep-notes
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: default
+
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
