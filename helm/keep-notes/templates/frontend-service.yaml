@@ -1,0 +1,22 @@
+
+apiVersion: v1
+kind: Service
+
+metadata:
+  name: {{ .Release.Name }}-frontend
+  labels:
+    app: keep-notes
+    component: frontend
+
+spec:
+  type: {{ .Values.frontend.service.type }}
+
+  selector:
+    app: keep-notes
+    component: frontend
+
+  ports:
+    - name: http
+      port: {{ .Values.frontend.service.port }}
+      targetPort: {{ .Values.frontend.containerPort }}
+      protocol: TCP

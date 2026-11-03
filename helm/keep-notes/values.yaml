@@ -1,0 +1,38 @@
+
+frontend:
+  replicaCount: 1
+  image:
+    repository: nginx
+    tag: "1.28"
+  containerPort: 80
+  service:
+    type: ClusterIP
+    port: 80
+
+backend:
+  replicaCount: 3
+  image:
+    repository: nginx
+    tag: "1.28"
+  containerPort: 80
+  service:
+    type: ClusterIP
+    port: 8080
+
+postgres:
+  replicaCount: 1
+  image:
+    repository: postgres
+    tag: "17"
+  port: 5432
+  storage: 1Gi
+  database: keepnotes
+  username: keepnotesuser
+
+resources:
+  requests:
+    cpu: 100m
+    memory: 128Mi
+  limits:
+    cpu: 500m
+    memory: 256Mi
