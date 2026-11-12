@@ -1,0 +1,6 @@
+
+# Local monitoring backups and sensitive database files
+backups/
+*.db
+*.db-wal
+*.db-shm

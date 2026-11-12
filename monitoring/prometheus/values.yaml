@@ -1,0 +1,32 @@
+# Prometheus configuration for Keep Notes
+
+alertmanager:
+  enabled: false
+
+kube-state-metrics:
+  enabled: true
+
+prometheus-node-exporter:
+  enabled: false
+
+prometheus-pushgateway:
+  enabled: false
+
+server:
+  replicaCount: 1
+  persistentVolume:
+    enabled: true
+    size: 5Gi
+    accessModes:
+      - ReadWriteOnce
+  resources:
+    requests:
+      cpu: 100m
+      memory: 256Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
+
+configmapReload:
+  prometheus:
+    enabled: false

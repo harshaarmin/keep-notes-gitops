@@ -1,0 +1,11 @@
+
+apiVersion: v1
+kind: ConfigMap
+
+metadata:
+  name: grafana-dashboards
+  namespace: monitoring
+
+data:
+  keep-notes-kubernetes.json: |
+    {{- .Files.Get "dashboards/keep-notes-kubernetes.json" | nindent 4 }}

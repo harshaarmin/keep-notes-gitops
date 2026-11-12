@@ -1,0 +1,29 @@
+replicaCount: 1
+
+image:
+  repository: grafana/grafana
+  tag: "12.3.1"
+  pullPolicy: IfNotPresent
+
+service:
+  type: ClusterIP
+  port: 3000
+
+admin:
+  user: admin
+
+persistence:
+  enabled: true
+  claimName: grafana-data-fresh
+  storageClassName: standard
+  accessModes:
+    - ReadWriteOnce
+  size: 2Gi
+
+resources:
+  requests:
+    cpu: 100m
+    memory: 128Mi
+  limits:
+    cpu: 500m
+    memory: 512Mi

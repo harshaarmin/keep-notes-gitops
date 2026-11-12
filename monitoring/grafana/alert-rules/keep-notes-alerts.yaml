@@ -1,0 +1,648 @@
+apiVersion: 1
+groups:
+    - orgId: 1
+      name: Keep Notes Alerts
+      folder: Keep Notes
+      interval: 1m
+      rules:
+        - uid: eg3yfwumi9logb
+          title: Keep Notes - Backend Replicas Unavailable
+          condition: C
+          data:
+            - refId: A
+              relativeTimeRange:
+                from: 600
+                to: 0
+              datasourceUid: PBFA97CFB590B2093
+              model:
+                editorMode: code
+                expr: |-
+                    (
+                      kube_deployment_spec_replicas{
+                        namespace="default",
+                        deployment="keep-notes-backend"
+                      }
+                      -
+                      kube_deployment_status_replicas_available{
+                        namespace="default",
+                        deployment="keep-notes-backend"
+                      }
+                    ) or vector(0)
+                instant: true
+                intervalMs: 1000
+                legendFormat: __auto
+                maxDataPoints: 43200
+                range: false
+                refId: A
+            - refId: C
+              datasourceUid: __expr__
+              model:
+                conditions:
+                    - evaluator:
+                        params:
+                            - 0
+                        type: gt
+                      operator:
+                        type: and
+                      query:
+                        params:
+                            - C
+                      reducer:
+                        params: []
+                        type: last
+                      type: query
+                datasource:
+                    type: __expr__
+                    uid: __expr__
+                expression: A
+                intervalMs: 1000
+                maxDataPoints: 43200
+                refId: C
+                type: threshold
+          noDataState: NoData
+          execErrState: Error
+          for: 1m
+          annotations:
+            description: The number of available Keep Notes backend replicas is lower than the desired replica count. Check the backend deployment and pod health in Kubernetes.
+            summary: Keep Notes backend replicas are unavailable.
+          isPaused: false
+          notification_settings:
+            receiver: grafana-default-email
+        - uid: dg3ygolh2klj4e
+          title: Keep Notes - Backend Pod Restarts
+          condition: C
+          data:
+            - refId: A
+              relativeTimeRange:
+                from: 600
+                to: 0
+              datasourceUid: PBFA97CFB590B2093
+              model:
+                editorMode: code
+                expr: |-
+                    sum(
+                      increase(
+                        kube_pod_container_status_restarts_total{
+                          namespace="default",
+                          pod=~"keep-notes-backend-.*",
+                          container!="",
+                          container!="POD"
+                        }[5m]
+                      )
+                    ) or vector(0)
+                instant: true
+                intervalMs: 1000
+                legendFormat: __auto
+                maxDataPoints: 43200
+                range: false
+                refId: A
+            - refId: C
+              datasourceUid: __expr__
+              model:
+                conditions:
+                    - evaluator:
+                        params:
+                            - 0
+                        type: gt
+                      operator:
+                        type: and
+                      query:
+                        params:
+                            - C
+                      reducer:
+                        params: []
+                        type: last
+                      type: query
+                datasource:
+                    type: __expr__
+                    uid: __expr__
+                expression: A
+                intervalMs: 1000
+                maxDataPoints: 43200
+                refId: C
+                type: threshold
+          noDataState: OK
+          execErrState: Error
+          for: 1m
+          annotations:
+            description: A Keep Notes backend container restart was detected within the last 5 minutes. Check the backend pod logs and Kubernetes events to investigate.
+            summary: Keep Notes backend container has restarted.
+          isPaused: false
+          notification_settings:
+            receiver: grafana-default-email
+        - uid: bg3yhbv8z38cgd
+          title: Keep Notes - Frontend Pod Restarts
+          condition: C
+          data:
+            - refId: A
+              relativeTimeRange:
+                from: 600
+                to: 0
+              datasourceUid: PBFA97CFB590B2093
+              model:
+                editorMode: code
+                expr: |-
+                    sum(
+                      increase(
+                        kube_pod_container_status_restarts_total{
+                          namespace="default",
+                          pod=~"keep-notes-frontend-.*",
+                          container!="",
+                          container!="POD"
+                        }[5m]
+                      )
+                    ) or vector(0)
+                instant: true
+                intervalMs: 1000
+                legendFormat: __auto
+                maxDataPoints: 43200
+                range: false
+                refId: A
+            - refId: C
+              datasourceUid: __expr__
+              model:
+                conditions:
+                    - evaluator:
+                        params:
+                            - 0
+                        type: gt
+                      operator:
+                        type: and
+                      query:
+                        params:
+                            - C
+                      reducer:
+                        params: []
+                        type: last
+                      type: query
+                datasource:
+                    type: __expr__
+                    uid: __expr__
+                expression: A
+                intervalMs: 1000
+                maxDataPoints: 43200
+                refId: C
+                type: threshold
+          noDataState: OK
+          execErrState: Error
+          for: 1m
+          annotations:
+            description: One or more Keep Notes frontend containers have restarted in the default namespace. Check frontend pod health and Kubernetes events.
+            summary: Keep Notes frontend container has restarted.
+          isPaused: false
+          notification_settings:
+            receiver: grafana-default-email
+        - uid: ag3ykbvhzltkwb
+          title: Keep Notes - Frontend Replicas Unavailable
+          condition: C
+          data:
+            - refId: A
+              relativeTimeRange:
+                from: 600
+                to: 0
+              datasourceUid: PBFA97CFB590B2093
+              model:
+                editorMode: code
+                expr: |-
+                    (
+                      kube_deployment_spec_replicas{
+                        namespace="default",
+                        deployment="keep-notes-frontend"
+                      }
+                      -
+                      kube_deployment_status_replicas_available{
+                        namespace="default",
+                        deployment="keep-notes-frontend"
+                      }
+                    ) or vector(0)
+                instant: true
+                intervalMs: 1000
+                legendFormat: __auto
+                maxDataPoints: 43200
+                range: false
+                refId: A
+            - refId: C
+              datasourceUid: __expr__
+              model:
+                conditions:
+                    - evaluator:
+                        params:
+                            - 0
+                        type: gt
+                      operator:
+                        type: and
+                      query:
+                        params:
+                            - C
+                      reducer:
+                        params: []
+                        type: last
+                      type: query
+                datasource:
+                    type: __expr__
+                    uid: __expr__
+                expression: A
+                intervalMs: 1000
+                maxDataPoints: 43200
+                refId: C
+                type: threshold
+          noDataState: NoData
+          execErrState: Error
+          for: 1m
+          annotations:
+            description: The number of available Keep Notes frontend replicas is lower than the desired replica count. Check the frontend deployment and pod health in Kubernetes.
+            summary: Keep Notes frontend replicas are unavailable.
+          isPaused: false
+          notification_settings:
+            receiver: grafana-default-email
+        - uid: dg3ykftfkekn4a
+          title: Keep Notes - Backend CPU Usage High
+          condition: C
+          data:
+            - refId: A
+              relativeTimeRange:
+                from: 600
+                to: 0
+              datasourceUid: PBFA97CFB590B2093
+              model:
+                editorMode: code
+                expr: |-
+                    sum(
+                      rate(
+                        container_cpu_usage_seconds_total{
+                          namespace="default",
+                          pod=~"keep-notes-backend-.*",
+                          container!="",
+                          container!="POD"
+                        }[5m]
+                      )
+                    ) or vector(0)
+                instant: true
+                intervalMs: 1000
+                legendFormat: __auto
+                maxDataPoints: 43200
+                range: false
+                refId: A
+            - refId: C
+              datasourceUid: __expr__
+              model:
+                conditions:
+                    - evaluator:
+                        params:
+                            - 0.8
+                        type: gt
+                      operator:
+                        type: and
+                      query:
+                        params:
+                            - C
+                      reducer:
+                        params: []
+                        type: last
+                      type: query
+                datasource:
+                    type: __expr__
+                    uid: __expr__
+                expression: A
+                intervalMs: 1000
+                maxDataPoints: 43200
+                refId: C
+                type: threshold
+          noDataState: NoData
+          execErrState: Error
+          for: 1m
+          annotations:
+            description: The Keep Notes backend is consuming more than 0.8 CPU cores. Check application load and backend resource usage.
+            summary: Keep Notes backend CPU usage is high.
+          isPaused: false
+          notification_settings:
+            receiver: grafana-default-email
+        - uid: eg3ykwx8mqtxcf
+          title: Keep Notes - Backend Memory Usage High
+          condition: C
+          data:
+            - refId: A
+              relativeTimeRange:
+                from: 600
+                to: 0
+              datasourceUid: PBFA97CFB590B2093
+              model:
+                editorMode: code
+                expr: |-
+                    (
+                      sum by (pod) (
+                        container_memory_working_set_bytes{
+                          namespace="default",
+                          pod=~"keep-notes-backend-.*",
+                          container!="",
+                          container!="POD"
+                        }
+                      )
+                      /
+                      sum by (pod) (
+                        kube_pod_container_resource_limits{
+                          namespace="default",
+                          pod=~"keep-notes-backend-.*",
+                          resource="memory",
+                          unit="byte"
+                        }
+                      )
+                    ) * 100 or vector(0)
+                instant: true
+                intervalMs: 1000
+                legendFormat: __auto
+                maxDataPoints: 43200
+                range: false
+                refId: A
+            - refId: C
+              datasourceUid: __expr__
+              model:
+                conditions:
+                    - evaluator:
+                        params:
+                            - 80
+                        type: gt
+                      operator:
+                        type: and
+                      query:
+                        params:
+                            - C
+                      reducer:
+                        params: []
+                        type: last
+                      type: query
+                datasource:
+                    type: __expr__
+                    uid: __expr__
+                expression: A
+                intervalMs: 1000
+                maxDataPoints: 43200
+                refId: C
+                type: threshold
+          noDataState: NoData
+          execErrState: Error
+          for: 5m
+          annotations:
+            description: A Keep Notes backend pod is using more than 80% of its configured memory limit. Check memory consumption and investigate potential memory leaks.
+            summary: Keep Notes backend memory usage is high.
+          isPaused: false
+          notification_settings:
+            receiver: grafana-default-email
+        - uid: eg3ylqr2nbi80f
+          title: Keep Notes - Frontend CPU Usage High
+          condition: C
+          data:
+            - refId: A
+              relativeTimeRange:
+                from: 600
+                to: 0
+              datasourceUid: PBFA97CFB590B2093
+              model:
+                editorMode: code
+                expr: |-
+                    sum by (pod) (
+                      rate(
+                        container_cpu_usage_seconds_total{
+                          namespace="default",
+                          pod=~"keep-notes-frontend-.*",
+                          container!="",
+                          container!="POD"
+                        }[5m]
+                      )
+                    ) or vector(0)
+                instant: true
+                intervalMs: 1000
+                legendFormat: __auto
+                maxDataPoints: 43200
+                range: false
+                refId: A
+            - refId: C
+              datasourceUid: __expr__
+              model:
+                conditions:
+                    - evaluator:
+                        params:
+                            - 0.8
+                        type: gt
+                      operator:
+                        type: and
+                      query:
+                        params:
+                            - C
+                      reducer:
+                        params: []
+                        type: last
+                      type: query
+                datasource:
+                    type: __expr__
+                    uid: __expr__
+                expression: A
+                intervalMs: 1000
+                maxDataPoints: 43200
+                refId: C
+                type: threshold
+          noDataState: NoData
+          execErrState: Error
+          for: 5m
+          annotations:
+            description: A Keep Notes frontend pod is consuming more than 0.8 CPU cores. Check frontend traffic and resource usage.
+            summary: Keep Notes frontend CPU usage is high.
+          isPaused: false
+          notification_settings:
+            receiver: grafana-default-email
+        - uid: dg3yluqq8libkd
+          title: Keep Notes - Frontend Memory Usage High
+          condition: C
+          data:
+            - refId: A
+              relativeTimeRange:
+                from: 600
+                to: 0
+              datasourceUid: PBFA97CFB590B2093
+              model:
+                editorMode: code
+                expr: |-
+                    (
+                      sum by (pod) (
+                        container_memory_working_set_bytes{
+                          namespace="default",
+                          pod=~"keep-notes-frontend-.*",
+                          container!="",
+                          container!="POD"
+                        }
+                      )
+                      /
+                      sum by (pod) (
+                        kube_pod_container_resource_limits{
+                          namespace="default",
+                          pod=~"keep-notes-frontend-.*",
+                          resource="memory",
+                          unit="byte"
+                        }
+                      )
+                    ) * 100 or vector(0)
+                instant: true
+                intervalMs: 1000
+                legendFormat: __auto
+                maxDataPoints: 43200
+                range: false
+                refId: A
+            - refId: C
+              datasourceUid: __expr__
+              model:
+                conditions:
+                    - evaluator:
+                        params:
+                            - 80
+                        type: gt
+                      operator:
+                        type: and
+                      query:
+                        params:
+                            - C
+                      reducer:
+                        params: []
+                        type: last
+                      type: query
+                datasource:
+                    type: __expr__
+                    uid: __expr__
+                expression: A
+                intervalMs: 1000
+                maxDataPoints: 43200
+                refId: C
+                type: threshold
+          noDataState: NoData
+          execErrState: Error
+          for: 5m
+          annotations:
+            description: A Keep Notes frontend pod is using more than 80% of its configured memory limit. Investigate memory consumption and potential memory leaks.
+            summary: Keep Notes frontend memory usage is high.
+          isPaused: false
+          notification_settings:
+            receiver: grafana-default-email
+        - uid: fg3ym07xq09vka
+          title: Keep Notes - PostgreSQL Pod Restarts
+          condition: C
+          data:
+            - refId: A
+              relativeTimeRange:
+                from: 600
+                to: 0
+              datasourceUid: PBFA97CFB590B2093
+              model:
+                editorMode: code
+                expr: |-
+                    sum(
+                      increase(
+                        kube_pod_container_status_restarts_total{
+                          namespace="default",
+                          pod=~"keep-notes-postgres-.*",
+                          container!="",
+                          container!="POD"
+                        }[5m]
+                      )
+                    ) or vector(0)
+                instant: true
+                intervalMs: 1000
+                legendFormat: __auto
+                maxDataPoints: 43200
+                range: false
+                refId: A
+            - refId: C
+              datasourceUid: __expr__
+              model:
+                conditions:
+                    - evaluator:
+                        params:
+                            - 0
+                        type: gt
+                      operator:
+                        type: and
+                      query:
+                        params:
+                            - C
+                      reducer:
+                        params: []
+                        type: last
+                      type: query
+                datasource:
+                    type: __expr__
+                    uid: __expr__
+                expression: A
+                intervalMs: 1000
+                maxDataPoints: 43200
+                refId: C
+                type: threshold
+          noDataState: OK
+          execErrState: Error
+          for: 1m
+          annotations:
+            description: The Keep Notes PostgreSQL container has restarted within the last 5 minutes. Check PostgreSQL logs, pod events and persistent storage.
+            summary: Keep Notes PostgreSQL container has restarted.
+          isPaused: false
+          notification_settings:
+            receiver: grafana-default-email
+        - uid: bg3ym3l5h4g74d
+          title: Keep Notes - PostgreSQL Pod Unavailable
+          condition: C
+          data:
+            - refId: A
+              relativeTimeRange:
+                from: 600
+                to: 0
+              datasourceUid: PBFA97CFB590B2093
+              model:
+                editorMode: code
+                expr: |-
+                    (
+                      kube_deployment_spec_replicas{
+                        namespace="default",
+                        deployment="keep-notes-postgres"
+                      }
+                      -
+                      kube_deployment_status_replicas_available{
+                        namespace="default",
+                        deployment="keep-notes-postgres"
+                      }
+                    ) or vector(0)
+                instant: true
+                intervalMs: 1000
+                legendFormat: __auto
+                maxDataPoints: 43200
+                range: false
+                refId: A
+            - refId: C
+              datasourceUid: __expr__
+              model:
+                conditions:
+                    - evaluator:
+                        params:
+                            - 0
+                        type: gt
+                      operator:
+                        type: and
+                      query:
+                        params:
+                            - C
+                      reducer:
+                        params: []
+                        type: last
+                      type: query
+                datasource:
+                    type: __expr__
+                    uid: __expr__
+                expression: A
+                intervalMs: 1000
+                maxDataPoints: 43200
+                refId: C
+                type: threshold
+          noDataState: NoData
+          execErrState: Error
+          for: 1m
+          annotations:
+            description: The Keep Notes PostgreSQL deployment has fewer available replicas than desired. Check the PostgreSQL pod, logs, PVC and Kubernetes events.
+            summary: Keep Notes PostgreSQL pod is unavailable.
+          isPaused: false
+          notification_settings:
+            receiver: grafana-default-email
