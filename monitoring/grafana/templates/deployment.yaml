@@ -72,6 +72,12 @@ spec:
             - name: GF_SMTP_STARTTLS_POLICY
               value: "Mandatory"
 
+            - name: GRAFANA_ALERT_EMAIL
+              valueFrom:
+                secretKeyRef:
+                  name: grafana-alert-email
+                  key: recipient-email 
+
           volumeMounts:
             - name: grafana-datasources
               mountPath: /etc/grafana/provisioning/datasources
